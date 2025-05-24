@@ -1,50 +1,50 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
+import { fetchBooks } from '../api/api';
 
-const books = [
-  { id: '1', title: 'Dế Mèn Phiêu Lưu Ký', description: 'Cuộc phiêu lưu kỳ thú của Dế Mèn.' },
-  { id: '2', title: 'Totto-chan: Cô bé bên cửa sổ', description: 'Câu chuyện cảm động về giáo dục tự do.' },
-];
+interface Book {
+  id: number;
+  title: string;
+  author: string;
+}
 
 export default function HomeScreen({ navigation }: any) {
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBooks()
+      .then(setBooks)
+      .catch(err => console.log('Lỗi lấy sách:', err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <ActivityIndicator size="large" style={{ flex: 1 }} />;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Danh sách sách</Text>
       <FlatList
         data={books}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item}
-            onPress={() => navigation.navigate('BookDetail', { book: item })}
-          >
-            <Text style={styles.bookTitle}>{item.title}</Text>
+          <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('BookDetail', { bookId: item.id })}>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.author}>Tác giả: {item.author}</Text>
           </TouchableOpacity>
         )}
       />
-      <TouchableOpacity style={styles.contactButton} onPress={() => navigation.navigate('Contact')}>
-        <Text style={styles.contactText}>Liên hệ</Text>
-      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
-  title: { fontSize: 22, fontWeight: '600', marginBottom: 10 },
-  item: {
+  container: { flex: 1, padding: 10 },
+  card: {
+    backgroundColor: '#f2f2f2',
     padding: 15,
-    backgroundColor: '#f4f4f4',
     marginBottom: 10,
-    borderRadius: 8,
+    borderRadius: 8
   },
-  bookTitle: { fontSize: 18 },
-  contactButton: {
-    marginTop: 20,
-    backgroundColor: '#007bff',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  contactText: { color: 'white', fontWeight: 'bold' },
+  title: { fontSize: 18, fontWeight: 'bold' },
+  author: { fontSize: 14, color: '#333' }
 });
