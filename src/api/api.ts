@@ -4,7 +4,7 @@ export const login = async (username: string, password: string) => {
     const res = await fetch(`${BASE_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }) // KHÔNG cần email
+      body: JSON.stringify({ username, password }) 
     });
     const text = await res.text();
     try {
@@ -48,11 +48,11 @@ export const fetchBookById = async (id: number) => {
   }
 };
 
-export const postComment = async (bookId: number, userId: number, content: string) => {
+export const postComment = async (bookId: number, userId: number, content: string, rating: number) => {
     const res = await fetch(`http://10.0.2.2:4000/api/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bookId, userId, content })  
+      body: JSON.stringify({ bookId, userId, content, rating })  
     });
     const text = await res.text();
     try {

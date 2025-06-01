@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState , useLayoutEffect  } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { fetchBooks } from '../api/api';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/types';
 
 interface Book {
   id: number;
@@ -8,9 +11,10 @@ interface Book {
   author: string;
 }
 
-export default function HomeScreen({ navigation }: any) {
+export default function HomeScreen() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     fetchBooks()
@@ -18,7 +22,7 @@ export default function HomeScreen({ navigation }: any) {
       .catch(err => console.log('Lỗi lấy sách:', err))
       .finally(() => setLoading(false));
   }, []);
-
+ 
   if (loading) return <ActivityIndicator size="large" style={{ flex: 1 }} />;
 
   return (
