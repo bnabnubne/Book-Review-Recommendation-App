@@ -47,15 +47,12 @@ export default function BookDetailScreen() {
     const token = await AsyncStorage.getItem('token');
     const userIdStr = await AsyncStorage.getItem('userId');
     if (!token || !userIdStr) return Alert.alert('Bạn cần đăng nhập');
-
-    
     if (!userRating) return Alert.alert('Hãy đánh giá sao cho sách');
     if (!newComment.trim()) return Alert.alert('Vui lòng nhập bình luận');
 
     const userId = parseInt(userIdStr);
     try {
       console.log('🔄 Gửi:', { bookId, userId, newComment, userRating });
-
       await postComment(bookId, userId, newComment, userRating);
       setNewComment('');
       setUserRating(0);
@@ -63,7 +60,6 @@ export default function BookDetailScreen() {
     } catch (error) {
       Alert.alert('Lỗi gửi bình luận');
       console.error('❌ Gửi lỗi:', error);
-
     }
   };
 
@@ -82,16 +78,14 @@ export default function BookDetailScreen() {
       <View style={styles.starRow}>
         {[1, 2, 3, 4, 5].map((val) => (
           <TouchableOpacity key={val} onPress={() => onSelect?.(val)}>
-            <Text style={[styles.star, val <= selected ? styles.starActive : {}]}>
-              ⭐
-            </Text>
+            <Text style={[styles.star, val <= selected ? styles.starActive : {}]}>⭐</Text>
           </TouchableOpacity>
         ))}
       </View>
     );
   };
 
-  if (!book || !book.title) return <Text>Đang tải...</Text>;
+  if (!book || !book.title) return <Text style={styles.loading}>Đang tải...</Text>;
 
   return (
     <FlatList
@@ -126,8 +120,8 @@ export default function BookDetailScreen() {
         </View>
       )}
       ListFooterComponent={
-        <View style={{ padding: 20 }}>
-          <Text>Đánh giá sách:</Text>
+        <View style={styles.footer}>
+          <Text style={styles.footerTitle}>Đánh giá sách:</Text>
           {renderStars(userRating, setUserRating)}
           <TextInput
             placeholder="Nhập bình luận"
@@ -135,7 +129,7 @@ export default function BookDetailScreen() {
             value={newComment}
             onChangeText={setNewComment}
           />
-          <Button title="Gửi bình luận" onPress={handleComment} />
+          <Button title="Gửi bình luận" onPress={handleComment} color="#B7AC9C" />
         </View>
       }
     />
@@ -143,21 +137,24 @@ export default function BookDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', marginTop: 10 },
-  author: { fontSize: 18, marginTop: 5 },
-  desc: { fontSize: 16, marginVertical: 10 },
-  cover: { width: '100%', height: 300, resizeMode: 'cover', borderRadius: 8 },
-  rating: { fontSize: 16, color: 'orange', marginVertical: 5 },
-  commentTitle: { fontSize: 20, fontWeight: 'bold', marginTop: 20, marginBottom: 10 },
-  commentBox: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' },
-  input: { borderWidth: 1, padding: 10, marginTop: 10, borderRadius: 6 },
-  time: { fontSize: 12, color: 'gray' },
-  username: { fontWeight: 'bold' },
+  container: { padding: 20, backgroundColor: '#F5F4F1' },
+  title: { fontSize: 24, fontWeight: 'bold', marginTop: 10, color: '#7B5E57' },
+  author: { fontSize: 18, marginTop: 5, color: '#8C7B75' },
+  desc: { fontSize: 16, marginVertical: 10, color: '#4E4E4E' },
+  cover: { width: '100%', height: 300, resizeMode: 'cover', borderRadius: 8, marginBottom: 10 },
+  rating: { fontSize: 16, color: '#BFA597', marginVertical: 5 },
+  commentTitle: { fontSize: 20, fontWeight: 'bold', marginTop: 20, marginBottom: 10, color: '#7B5E57' },
+  commentBox: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#EFE7DA' },
+  input: { borderWidth: 1, padding: 10, marginTop: 10, borderRadius: 6, borderColor: '#E1DACA', backgroundColor: '#FFFFFF' },
+  time: { fontSize: 12, color: '#999' },
+  username: { fontWeight: 'bold', color: '#7B5E57' },
   subjectContainer: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
-  subjectLabel: { fontWeight: 'bold', marginTop: 10 },
-  subjectTag: { backgroundColor: '#eee', borderRadius: 5, padding: 4, marginRight: 5, marginTop: 5 },
+  subjectLabel: { fontWeight: 'bold', marginTop: 10, color: '#7B5E57' },
+  subjectTag: { backgroundColor: '#EFE7DA', borderRadius: 5, padding: 4, marginRight: 5, marginTop: 5, color: '#4E4E4E' },
   starRow: { flexDirection: 'row', marginVertical: 5 },
   star: { fontSize: 28, opacity: 0.3 },
-  starActive: { opacity: 1 }
+  starActive: { opacity: 1 },
+  footer: { padding: 20, backgroundColor: '#F5F4F1' },
+  footerTitle: { fontSize: 18, fontWeight: 'bold', color: '#7B5E57' },
+  loading: { flex: 1, justifyContent: 'center', textAlign: 'center', marginTop: 50 }
 });

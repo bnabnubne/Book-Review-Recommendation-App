@@ -32,7 +32,8 @@ export const fetchBooks = async () => {
   const res = await fetch(`${BASE_URL}/books`);
   const text = await res.text();
   try {
-    return JSON.parse(text);
+    const data = JSON.parse(text);
+    return data;
   } catch (e) {
     throw new Error('Lỗi server: không nhận được JSON từ fetchBooks');
   }
@@ -61,4 +62,11 @@ export const postComment = async (bookId: number, userId: number, content: strin
       console.error('❌ postComment error response:', text);
       throw new Error('Lỗi server: không nhận được JSON từ postComment');
     }
+  };
+  export const fetchBooksByGenre = async (genre : string) => {
+    // Chuyển genre thành dạng slug, ví dụ: 'science fiction' => 'science-fiction'
+    const genreSlug = genre.toLowerCase().replace(/\s+/g, '-');
+    const res = await fetch(`${BASE_URL}/books/genre/${encodeURIComponent(genreSlug)}`);
+    if (!res.ok) throw new Error('Failed to fetch books by genre');
+    return await res.json();
   };
