@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  StyleSheet,
-  Alert
-} from 'react-native';
+import { View, Text, TextInput,Pressable,StyleSheet,Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login, register } from '../api/api';
 
@@ -25,11 +18,12 @@ export default function LoginScreen({ navigation }: any) {
           await AsyncStorage.setItem('userId', res.userId.toString());
         }
         navigation.replace('Home');
+        Alert.alert('Success', 'Login successful!');
       } else {
-        Alert.alert('Sai thông tin');
+        Alert.alert('Error', 'Incorrect username or password.');
       }
     } catch (err) {
-      Alert.alert('Lỗi đăng nhập');
+      Alert.alert('Error', 'Login failed. Please try again.');
     }
   };
 
@@ -37,17 +31,21 @@ export default function LoginScreen({ navigation }: any) {
     try {
       const res = await register(username, email, password);
       if (res.message) {
-        Alert.alert('Đăng ký thành công, hãy đăng nhập');
+        Alert.alert('Success', 'Registration successful! Please log in.');
         setIsRegistering(false);
       }
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        Alert.alert('Invalid email.');
+        return;
+      }
     } catch (err) {
-      Alert.alert('Lỗi đăng ký');
-    }
+      Alert.alert('Error', 'Registration failed. Please try again.');
+   }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{isRegistering ? 'Welcome. We\'re glad to see you. ' : 'Welcome'}</Text>
+      <Text style={styles.title}>{isRegistering ? 'Create Your Account ' : 'Welcome Back, Friend!'}</Text>
       <TextInput
         placeholder="Username"
         placeholderTextColor="#aaa"

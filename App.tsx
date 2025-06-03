@@ -14,27 +14,66 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: true }}>
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Navigator initialRouteName="Welcome" 
+        screenOptions={{ headerShown: true, headerStyle:{ backgroundColor: '#EFE7DA'}, headerTintColor: '#7D5A50' ,headerTitleStyle: {
+          fontWeight: '700',
+          fontSize: 20,
+          fontFamily: 'serif',
+        }  }}>
+        <Stack.Screen 
+        name="Welcome" 
+        component={WelcomeScreen}
+        options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+        name="Login" 
+        component={LoginScreen}
+        options={{ headerShown: false }} 
+        />
         <Stack.Screen name="Home" component={HomeScreen}
           options={({ navigation }) => ({
             headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.navigate('Contact')} style={{ marginRight: 15 }}>
-                <Text style={{ color: 'black' }}>Liên hệ</Text>
-              </TouchableOpacity>
+              <TouchableOpacity
+              onPress={() => navigation.navigate('Contact')}
+              style={{
+                marginRight: 10,
+                borderRadius: 20,
+                backgroundColor: '#A67C52',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minWidth: 95,
+                minHeight: 35,
+              }}
+              activeOpacity={0.7}  >
+          <Text style={{ color: '#fff', fontWeight: '800', fontFamily: 'serif' }}>
+           📞 Contact
+          </Text> 
+          
+        </TouchableOpacity>
             ) })}
-        
         />
         <Stack.Screen name="BookDetail" component={BookDetailScreen}
           options={({ navigation }) => ({
-            title: 'Chi tiết sách',
+            title: 'Detail',
             headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.navigate('Contact')} style={{ marginRight: 15 }}>
-                <Text style={{ color: 'black' }}>Liên hệ</Text>
-              </TouchableOpacity>
-            )
-          })}
+              <TouchableOpacity
+              onPress={() => navigation.navigate('Contact')}
+              style={{
+                marginRight: 10,
+                borderRadius: 20,
+                backgroundColor: '#A67C52',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minWidth: 95,
+                minHeight: 35,
+              }}
+              activeOpacity={0.7}  >
+          <Text style={{ color: '#fff', fontWeight: '800', fontFamily: 'serif' }}>
+           📞 Contact
+          </Text> 
+          
+        </TouchableOpacity>
+            )})}
            />
         <Stack.Screen name="Contact" component={ContactScreen} />
       </Stack.Navigator>

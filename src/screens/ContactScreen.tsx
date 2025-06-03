@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  StyleSheet,
-  ActivityIndicator,
-  Keyboard,
-} from 'react-native';
+import { View, Text, TextInput,TouchableOpacity,Alert,StyleSheet,ActivityIndicator,Keyboard,TouchableWithoutFeedback,ScrollView} from 'react-native';
 
 export default function ContactScreen() {
   const [name, setName] = useState('');
@@ -18,13 +9,14 @@ export default function ContactScreen() {
 
   const handleSend = async () => {
     if (!name.trim() || !message.trim()) {
-      Alert.alert('Vui lòng nhập tên và nội dung góp ý.');
+      Alert.alert('Please enter your name and message.');
       return;
     }
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      Alert.alert('Email không hợp lệ.');
+      Alert.alert('Invalid email address.');
       return;
     }
+
     setSending(true);
     try {
       const res = await fetch('http://10.0.2.2:4000/api/feedback', {
@@ -34,90 +26,117 @@ export default function ContactScreen() {
       });
       const result = await res.json();
       if (res.ok) {
-        Alert.alert(result.message || 'Gửi góp ý thành công!');
+        Alert.alert('Thank you!', result.message || 'Feedback submitted successfully!');
         setName('');
         setEmail('');
         setMessage('');
         Keyboard.dismiss();
       } else {
-        Alert.alert(result.message || 'Gửi góp ý thất bại!');
+        Alert.alert('Error', result.message || 'Failed to send feedback.');
       }
     } catch (err) {
-      Alert.alert('Lỗi', 'Không gửi được góp ý');
+      Alert.alert('Network Error', 'Could not connect to the server.');
     }
     setSending(false);
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Góp ý & Liên hệ</Text>
-      <Text style={styles.desc}>Hãy cho chúng tôi biết ý kiến hoặc vấn đề của bạn!</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Tên của bạn *"
-        value={name}
-        onChangeText={setName}
-        autoCorrect={false}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email (tùy chọn)"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={[styles.input, styles.textArea]}
-        placeholder="Nhập nội dung góp ý *"
-        value={message}
-        onChangeText={setMessage}
-        multiline
-        numberOfLines={5}
-        textAlignVertical="top"
-      />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView contentContainerStyle={styles.scroll}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Contact Us</Text>
+          <Text style={styles.desc}>We'd love to hear your thoughts or issues.</Text>
 
-      <TouchableOpacity
-        style={[styles.button, sending && { backgroundColor: '#aaa' }]}
-        onPress={handleSend}
-        disabled={sending}
-        activeOpacity={0.7}
-      >
-        {sending ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Gửi góp ý</Text>}
-      </TouchableOpacity>
-    </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Your Name *"
+            value={name}
+            onChangeText={setName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={[styles.input, styles.textArea]}
+            placeholder="Your Message *"
+            value={message}
+            onChangeText={setMessage}
+            multiline
+            numberOfLines={5}
+            textAlignVertical="top"
+          />
+
+          <TouchableOpacity
+            style={[styles.button, sending && { backgroundColor: '#bbb' }]}
+            onPress={handleSend}
+            disabled={sending}
+            activeOpacity={0.8}
+          >
+            {sending ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Send Feedback</Text>}
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, backgroundColor: '#fff' },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 8, color: '#542e71' },
-  desc: { color: '#555', marginBottom: 16 },
+  scroll: { flexGrow: 1, backgroundColor: '#F5F1E9' },
+  container: {
+    padding: 24,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#7D5A50',
+    textAlign: 'center',
+    marginBottom: 6,
+    fontFamily: 'serif'
+  },
+  desc: {
+    color: '#5A4A42',
+    textAlign: 'center',
+    marginBottom: 24,
+    fontSize: 15,
+  },
   input: {
+    backgroundColor: '#FFF',
     borderWidth: 1,
-    borderColor: '#bbb',
-    backgroundColor: '#fafafa',
-    padding: 12,
-    marginBottom: 14,
-    borderRadius: 10,
+    borderColor: '#D4C9B4',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 16,
     fontSize: 16,
+    color: '#4A3A2A',
+    shadowColor: '#ccc',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
   textArea: {
-    height: 110,
-    marginBottom: 18,
+    height: 120,
   },
   button: {
-    backgroundColor: '#542e71',
-    borderRadius: 10,
-    paddingVertical: 14,
+    backgroundColor: '#A16B3E',
+    paddingVertical: 15,
+    borderRadius: 30,
     alignItems: 'center',
-    marginTop: 5,
-    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3,
+    marginTop: 10,
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 17,
-    letterSpacing: 0.5,
+    fontWeight: '600',
+    fontSize: 16,
+    letterSpacing: 0.4,
   },
 });
