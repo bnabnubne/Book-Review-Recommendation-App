@@ -64,7 +64,6 @@ export const postComment = async (bookId: number, userId: number, content: strin
     }
   };
   export const fetchBooksByGenre = async (genre : string) => {
-    // Chuyển genre thành dạng slug, ví dụ: 'science fiction' => 'science-fiction'
     const genreSlug = genre.toLowerCase().replace(/\s+/g, '-');
     const res = await fetch(`${BASE_URL}/books/genre/${encodeURIComponent(genreSlug)}`);
     if (!res.ok) throw new Error('Failed to fetch books by genre');
