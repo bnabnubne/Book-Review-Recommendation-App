@@ -7,8 +7,6 @@ import HomeScreen from './src/screens/HomeScreen';
 import BookDetailScreen from './src/screens/BookDetailScreen';
 import ContactScreen from './src/screens/ContactScreen';
 import { TouchableOpacity, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {

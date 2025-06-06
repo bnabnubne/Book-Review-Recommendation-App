@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput,Pressable,StyleSheet,Alert } from 'react-native';
+import { Image, View, Text, TextInput,Pressable,StyleSheet,Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login, register } from '../api/api';
 
@@ -45,6 +45,11 @@ export default function LoginScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={require('../assets/logo.png')}
+        style={styles.logo}
+        resizeMode="contain"
+      />
       <Text style={styles.title}>{isRegistering ? 'Create Your Account ' : 'Welcome Back, Friend!'}</Text>
       <TextInput
         placeholder="Username"
@@ -90,6 +95,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     backgroundColor: '#F5F4F1',
+  },
+  logo: {
+    width: 120,
+    height: 120,
+    marginBottom: 20,
+    alignSelf: 'center',
   },
   title: {
     fontSize: 26,

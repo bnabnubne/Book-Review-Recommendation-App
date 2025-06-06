@@ -46,9 +46,9 @@ export default function BookDetailScreen() {
   const handleComment = async () => {
     const token = await AsyncStorage.getItem('token');
     const userIdStr = await AsyncStorage.getItem('userId');
-    if (!token || !userIdStr) return Alert.alert('Bạn cần đăng nhập');
-    if (!userRating) return Alert.alert('Hãy đánh giá sao cho sách');
-    if (!newComment.trim()) return Alert.alert('Vui lòng nhập bình luận');
+    if (!token || !userIdStr) return Alert.alert('You need to log in');
+    if (!userRating) return Alert.alert('Please rate the book');
+    if (!newComment.trim()) return Alert.alert('Please enter a comment');
 
     const userId = parseInt(userIdStr);
     try {
@@ -58,8 +58,7 @@ export default function BookDetailScreen() {
       setUserRating(0);
       await fetchComments();
     } catch (error) {
-      Alert.alert('Lỗi gửi bình luận');
-      console.error('❌ Gửi lỗi:', error);
+      Alert.alert('Error!'); 
     }
   };
 
@@ -85,7 +84,7 @@ export default function BookDetailScreen() {
     );
   };
 
-  if (!book || !book.title) return <Text style={styles.loading}>Đang tải...</Text>;
+  if (!book || !book.title) return <Text style={styles.loading}>Loading...</Text>;
 
   return (
     <FlatList
@@ -93,11 +92,11 @@ export default function BookDetailScreen() {
         <View style={styles.container}>
           {book.cover_url && <Image source={{ uri: book.cover_url }} style={styles.cover} />}
           <Text style={styles.title}>{book.title}</Text>
-          <Text style={styles.author}>Tác giả: {book.author}</Text>
-          <Text style={styles.rating}>⭐ {averageRating} ({comments.length} đánh giá)</Text>
-          <Text style={styles.desc}>{book.description || 'Không có mô tả'}</Text>
+          <Text style={styles.author}>Author: {book.author}</Text>
+          <Text style={styles.rating}>⭐ {averageRating} ({comments.length} rate)</Text>
+          <Text style={styles.desc}>{book.description || 'No description'}</Text>
 
-          <Text style={styles.subjectLabel}>Chủ đề:</Text>
+          <Text style={styles.subjectLabel}>Subject:</Text>
           <View style={styles.subjectContainer}>
             {(Array.isArray(book.subjects) ? book.subjects : JSON.parse(book.subjects)).map(
               (subj: string, idx: number) => (
@@ -106,7 +105,7 @@ export default function BookDetailScreen() {
             )}
           </View>
 
-          <Text style={styles.commentTitle}>Đánh giá cộng đồng:</Text>
+          <Text style={styles.commentTitle}>Community comments:</Text>
         </View>
       }
       data={comments}
@@ -121,15 +120,15 @@ export default function BookDetailScreen() {
       )}
       ListFooterComponent={
         <View style={styles.footer}>
-          <Text style={styles.footerTitle}>Đánh giá sách:</Text>
+          <Text style={styles.footerTitle}>Book rating:</Text>
           {renderStars(userRating, setUserRating)}
           <TextInput
-            placeholder="Nhập bình luận"
+            placeholder="Enter comment"
             style={styles.input}
             value={newComment}
             onChangeText={setNewComment}
           />
-          <Button title="Gửi bình luận" onPress={handleComment} color="#B7AC9C" />
+          <Button title="Post comment" onPress={handleComment} color="#B7AC9C" />
         </View>
       }
     />
@@ -141,7 +140,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 24, fontWeight: 'bold', marginTop: 10, color: '#7B5E57' },
   author: { fontSize: 18, marginTop: 5, color: '#8C7B75' },
   desc: { fontSize: 16, marginVertical: 10, color: '#4E4E4E' },
-  cover: { width: '100%', height: 300, resizeMode: 'cover', borderRadius: 8, marginBottom: 10 },
+  cover: { width: '100%', aspectRatio: 2 / 3, resizeMode: 'cover', borderRadius: 8, marginBottom: 10 },
   rating: { fontSize: 16, color: '#BFA597', marginVertical: 5 },
   commentTitle: { fontSize: 20, fontWeight: 'bold', marginTop: 20, marginBottom: 10, color: '#7B5E57' },
   commentBox: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#EFE7DA' },

@@ -1,1 +1,1 @@
-# 📚 Bookify - Book Review & Recommendation App
+# Bookify - Book Review & Recommendation App
